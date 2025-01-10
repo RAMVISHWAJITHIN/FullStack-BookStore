@@ -6,12 +6,27 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import required modules
 import { Navigation } from "swiper/modules";
 import BookCard from '../books/BookCard';
+import { useFetchAllBooksQuery } from '../../redux/Features/books/booksApi';
 const Recommended = () => {
-    const [books, setBooks] = useState([]);
-    useEffect(()=>{
-      fetch("books.json").then((res)=>res.json()).then((data)=>setBooks(data))
+    // const [books, setBooks] = useState([]);
+    // useEffect(()=>{
+    //   fetch("books.json").then((res)=>res.json()).then((data)=>setBooks(data))
 
-    })
+    // })
+      const { data, isLoading, isError, error } = useFetchAllBooksQuery();
+        const books = data?.book || [];
+        console.log(books)
+        if (isLoading) {
+          return <div>Loading...</div>;
+        }
+        
+        if (isError) {
+          return <div>Error: {error?.message}</div>;
+        }
+        
+        if (books.length === 0) {
+          return <div>No books available</div>;
+        }
   return (
     <>
     <div className="py-6">

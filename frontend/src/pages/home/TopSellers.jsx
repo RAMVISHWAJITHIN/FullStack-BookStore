@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 
 // Import required modules
 import { Navigation } from "swiper/modules";
+import { useFetchAllBooksQuery } from "../../redux/Features/books/booksApi";
 
 const categories = [
   "Choose a genre",
@@ -18,19 +19,30 @@ const categories = [
 ];
 
 const TopSellers = () => {
-  const [books, setBooks] = useState([]);
+  //  const [books, setBooks] = useState([]);
+
   const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
+  const { data, isLoading, isError, error } = useFetchAllBooksQuery();
+  const books = data?.book || [];
+  console.log(books)
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+  
+  if (books.length === 0) {
+    return <div>No books available</div>;
+  }
+  // useEffect(() => {
+  //   fetch("books.json")
+  //     .then((res) => res.json())
+  //     .then((data) => setBooks(data));
+  // }, []);
 
-  useEffect(() => {
-    fetch("books.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data));
-  }, []);
-
-  const filteredBooks =
-    selectedCategory === "Choose a genre"
-      ? books
-      : books.filter((book) => book.category === selectedCategory.toLowerCase());
+  const filteredBooks = selectedCategory === "Choose a genre" ? books : books.filter((book) => book.category === selectedCategory.toLowerCase());
 
   return (
     <div className="py-10">
