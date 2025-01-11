@@ -24,7 +24,7 @@ const TopSellers = () => {
   const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
   const { data, isLoading, isError, error } = useFetchAllBooksQuery();
   const books = data?.book || [];
-  console.log(books)
+  // console.log(books)
   if (isLoading) {
     return <div>Loading...</div>;
   }

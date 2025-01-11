@@ -15,7 +15,7 @@ const Recommended = () => {
     // })
       const { data, isLoading, isError, error } = useFetchAllBooksQuery();
         const books = data?.book || [];
-        console.log(books)
+        // console.log(books)
         if (isLoading) {
           return <div>Loading...</div>;
         }
