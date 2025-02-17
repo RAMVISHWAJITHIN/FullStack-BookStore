@@ -3,35 +3,65 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useCreateOrderMutation } from "../../redux/Features/orders/orderApi";
+import Swal from "sweetalert2";
 
 const CheckOut = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.newPrice, 0)
     .toFixed(2);
-
+  const {currentUser}=useAuth()
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-
+ const [createOrder,{isLoading,error}]=useCreateOrderMutation()
   const [isChecked, setIsChecked] = useState(false);
+
   const onSubmit = async (data) => {
     const newOrder = {
       name: data.name,
-
-      city: data.city,
-      country: data.country,
-      state: data.state,
-      zipcode: data.zipcode,
-
+      email: data.email,
       phone: data.phone,
+      address: {
+        city: data.city,
+        state: data.state,
+        country: data.country,
+        zipcode: data.zipcode,
+        street: data.address, // Assuming "address" input field is for street
+      },
       productIds: cartItems.map((item) => item?._id),
       totalPrice: totalPrice,
     };
-    console.log(newOrder);
+  
+    try {
+      await createOrder(newOrder).unwrap();
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to place order!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, place order!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Success!",
+            text: "Your order has been placed.",
+            icon: "success"
+          });
+        }
+      })
+    }catch (error) {
+      console.log("Error placing order", error);
+      alert("Failed to place order");
+    }
+    if(isLoading) return <div >Loading</div>
   };
   return (
     <>
