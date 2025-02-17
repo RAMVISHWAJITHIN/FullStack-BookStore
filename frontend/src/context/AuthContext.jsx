@@ -50,6 +50,7 @@ useEffect(()=>{
 
     const value={
       currentUser,
+      Loading,
       registerUser,
       loginUser,
       signInWithGoogle,

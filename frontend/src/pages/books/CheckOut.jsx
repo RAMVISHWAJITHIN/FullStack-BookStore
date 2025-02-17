@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useCreateOrderMutation } from "../../redux/Features/orders/orderApi";
 import Swal from "sweetalert2";
@@ -20,6 +20,7 @@ const CheckOut = () => {
     formState: { errors },
   } = useForm();
  const [createOrder,{isLoading,error}]=useCreateOrderMutation()
+ const navigate=useNavigate()
   const [isChecked, setIsChecked] = useState(false);
 
   const onSubmit = async (data) => {
@@ -56,7 +57,9 @@ const CheckOut = () => {
             icon: "success"
           });
         }
+
       })
+      navigate("/orders")
     }catch (error) {
       console.log("Error placing order", error);
       alert("Failed to place order");
