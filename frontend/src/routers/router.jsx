@@ -10,6 +10,13 @@ import CheckOut from '../pages/books/CheckOut'
 import SingleBook from '../pages/books/SingleBook';
 import PrivateRoute from './PrivateRoute';
 import OrderPage from '../pages/books/OrderPage';
+import AdminRoute from './AdminRoute';
+import AdminLogin from '../components/AdminLogin';
+import DashboardLayout from '../pages/dashboard/DashboardLayout';
+import Dashboard from '../pages/dashboard/Dashboard';
+import ManageBooks from '../pages/dashboard/managebooks/ManageBook';
+import AddBook from '../pages/dashboard/addbook/AddBook';
+import UpdateBook from '../pages/dashboard/EditBook/UpdateBook';
 
     const router = createBrowserRouter([
         {
@@ -50,7 +57,42 @@ import OrderPage from '../pages/books/OrderPage';
                 element:<SingleBook/>
             },
             ]
-        }])
+        },
+        {
+          path:"/admin",
+          element:<AdminLogin/>
+        }
+        ,
+    {
+        path:"/dashboard",
+        element: <AdminRoute><DashboardLayout/></AdminRoute>,
+        children:[
+            {
+              path: "",
+              element: <AdminRoute>
+                <Dashboard/>
+                </AdminRoute>
+            },
+            {
+              path: "add-new-book",
+              element: <AdminRoute>
+                <AddBook/>
+              </AdminRoute>
+            },
+            {
+              path: "edit-book/:id",
+              element: <AdminRoute>
+                <UpdateBook/>
+              </AdminRoute>
+            },
+            {
+              path: "manage-books",
+              element: <AdminRoute>
+                <ManageBooks/>
+              </AdminRoute>
+            }
+          ]
+    }])
 
 
 export default router;
