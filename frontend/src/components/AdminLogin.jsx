@@ -16,33 +16,60 @@ const AdminLogin = () => {
 
       const navigate = useNavigate()
 
-      const onSubmit = async (data) => {
-        // console.log(data)
+    //   const onSubmit = async (data) => {
+    //     // console.log(data)
+    //     try {
+    //        const response =  await axios.post(`${getBaseUrl()}/api/auth/admin`, data, {
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             }
+    //        })
+    //        const auth = response.data;
+    //     //    console.log(auth)
+    //         if(auth.token) {
+    //             localStorage.setItem('token', auth.token);
+    //             setTimeout(() => {
+    //                 localStorage.removeItem('token')
+    //                 alert('Token has been expired!, Please login again.');
+    //                 navigate("/")
+    //             }, 3600 * 1000)
+    //         }
+
+    //         alert("Admin Login successful!")
+    //         navigate("/dashboard")
+
+    //     } catch (error) {
+    //         setMessage("Please provide a valid email and password") 
+    //         console.error(error)
+    //     }
+    //   }
+    const onSubmit = async (data) => {
         try {
-           const response =  await axios.post(`${getBaseUrl()}/api/auth/admin`, data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-           })
-           const auth = response.data;
-        //    console.log(auth)
-            if(auth.token) {
+            const response = await axios.post(`${getBaseUrl()}/api/auth/admin`, data, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const auth = response.data;
+    
+            if (auth.token) {
                 localStorage.setItem('token', auth.token);
+                localStorage.setItem('isAdmin', auth.isAdmin ? "true" : "false"); // ✅ Store isAdmin
+    
                 setTimeout(() => {
-                    localStorage.removeItem('token')
-                    alert('Token has been expired!, Please login again.');
-                    navigate("/")
-                }, 3600 * 1000)
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('isAdmin'); // ✅ Remove isAdmin on expiry
+                    alert('Token expired! Please log in again.');
+                    navigate("/");
+                }, 3600 * 1000);
             }
-
-            alert("Admin Login successful!")
-            navigate("/dashboard")
-
+    
+            alert("Admin Login successful!");
+            navigate("/dashboard");
         } catch (error) {
-            setMessage("Please provide a valid email and password") 
-            console.error(error)
+            setMessage("Please provide a valid email and password");
+            console.error(error);
         }
-      }
+    };
+    
   return (
     <div className='h-screen flex justify-center items-center '>
         <div className='w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
